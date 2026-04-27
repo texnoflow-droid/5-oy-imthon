@@ -1,0 +1,78 @@
+{% extends 'transactions/base.html' %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <!-- Profil kartasi -->
+        <div class="card p-4 mb-4">
+            <div class="d-flex align-items-center gap-4">
+
+                <!-- Avatar -->
+                {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}"
+                     style="width:90px;height:90px;border-radius:50%;object-fit:cover;">
+                {% else %}
+                <div style="width:90px;height:90px;border-radius:50%;
+                            background:linear-gradient(135deg,#667eea,#764ba2);
+                            display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-user fa-2x text-white"></i>
+                </div>
+                {% endif %}
+
+                <!-- Ma'lumotlar -->
+                <div>
+                    <h4 class="fw-bold mb-1">
+                        {{ user.first_name }} {{ user.last_name }}
+                    </h4>
+                    <p class="text-muted mb-1">
+                        <i class="fas fa-envelope me-1"></i>{{ user.email }}
+                    </p>
+                    <p class="text-muted mb-1">
+                        <i class="fas fa-phone me-1"></i>
+                        {{ profile.phone|default:"Telefon kiritilmagan" }}
+                    </p>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-calendar me-1"></i>
+                        Ro'yxatdan o'tgan: {{ user.date_joined|date:"d.m.Y" }}
+                    </p>
+                </div>
+            </div>
+
+            {% if profile.bio %}
+            <hr>
+            <p class="text-muted mb-0">
+                <i class="fas fa-info-circle me-1"></i>{{ profile.bio }}
+            </p>
+            {% endif %}
+        </div>
+
+        <!-- Tahrirlash formasi -->
+        <div class="card p-4">
+            <h5 class="fw-bold mb-4">
+                <i class="fas fa-edit me-2 text-primary"></i>Profilni tahrirlash
+            </h5>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Telefon raqam</label>
+                    {{ form.phone }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">O'zingiz haqingizda</label>
+                    {{ form.bio }}
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Profil rasmi</label>
+                    {{ form.avatar }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-save me-1"></i>Saqlash
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

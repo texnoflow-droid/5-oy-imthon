@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Nazorat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .bg-custom-purple { background-color: #6366f1; }
+    </style>
+</head>
+<body>
+
+<nav class="bg-custom-purple p-4 text-white flex justify-between items-center shadow-lg">
+    <div class="flex items-center space-x-2 text-xl font-bold">
+        <i class="fas fa-wallet"></i>
+        <span>Finance Nazorat</span>
+    </div>
+    <div class="flex items-center space-x-4">
+        <span class="flex items-center space-x-1 cursor-pointer">
+            <i class="fas fa-user-circle"></i>
+            <span>Admin</span>
+        </span>
+        <button onclick="logout()" class="border border-white px-3 py-1 rounded hover:bg-white hover:text-indigo-600 transition">
+            <i class="fas fa-sign-out-alt"></i> Chiqish
+        </button>
+    </div>
+</nav>
+
+<div class="max-w-6xl mx-auto p-6">
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-emerald-600 p-6 rounded-2xl text-white shadow-md relative">
+            <p class="text-sm opacity-80">Umumiy Kirim</p>
+            <h2 id="total-income" class="text-3xl font-bold mt-1">0 so'm</h2>
+            <i class="fas fa-arrow-up absolute top-6 right-6 text-2xl opacity-50"></i>
+        </div>
+        <div class="bg-rose-500 p-6 rounded-2xl text-white shadow-md relative">
+            <p class="text-sm opacity-80">Umumiy Chiqim</p>
+            <h2 id="total-expense" class="text-3xl font-bold mt-1">0 so'm</h2>
+            <i class="fas fa-arrow-down absolute top-6 right-6 text-2xl opacity-50"></i>
+        </div>
+        <div class="bg-blue-500 p-6 rounded-2xl text-white shadow-md relative">
+            <p class="text-sm opacity-80">Balans</p>
+            <h2 id="balance" class="text-3xl font-bold mt-1">0 so'm</h2>
+            <i class="fas fa-wallet absolute top-6 right-6 text-2xl opacity-50"></i>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 flex justify-between items-center border-b">
+            <h3 class="text-lg font-bold text-gray-700">Tranzaksiyalar</h3>
+            <button onclick="toggleModal(true)" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 flex items-center space-x-2">
+                <i class="fas fa-plus"></i>
+                <span>Qo'shish</span>
+            </button>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 text-gray-500 text-sm uppercase">
+                    <tr>
+                        <th class="p-4">Nomi</th>
+                        <th class="p-4">Miqdor</th>
+                        <th class="p-4">Tur</th>
+                        <th class="p-4">Kategoriya</th>
+                        <th class="p-4">Sana</th>
+                        <th class="p-4">Amal</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-list">
+                    <tr id="empty-state">
+                        <td colspan="6" class="p-10 text-center text-gray-400">
+                            <i class="fas fa-box-open text-4xl mb-2"></i>
+                            <p>Hali hech narsa qo'shilmagan</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-md p-6 shadow-2xl">
+        <h3 class="text-xl font-bold mb-4">Yangi Tranzaksiya</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm text-gray-600">Nomi</label>
+                <input type="text" id="t-name" class="w-full border p-2 rounded mt-1 focus:ring-2 focus:ring-indigo-400 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600">Miqdor (so'm)</label>
+                <input type="number" id="t-amount" class="w-full border p-2 rounded mt-1 focus:ring-2 focus:ring-indigo-400 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600">Turi</label>
+                <select id="t-type" class="w-full border p-2 rounded mt-1 outline-none">
+                    <option value="kirim">Kirim</option>
+                    <option value="chiqim">Chiqim</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600">Kategoriya</label>
+                <input type="text" id="t-category" placeholder="Masalan: Maosh, Ovqat..." class="w-full border p-2 rounded mt-1 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600">Izoh</label>
+                <textarea id="t-note" class="w-full border p-2 rounded mt-1 outline-none"></textarea>
+            </div>
+        </div>
+        <div class="flex justify-end space-x-3 mt-6">
+            <button onclick="toggleModal(false)" class="text-gray-500 px-4 py-2 hover:bg-gray-100 rounded">Bekor qilish</button>
+            <button onclick="addTransaction()" class="bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-indigo-700">Saqlash</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let income = 0;
+    let expense = 0;
+
+    function toggleModal(show) {
+        document.getElementById('modal').classList.toggle('hidden', !show);
+    }
+
+    function logout() {
+        let user = prompt("Login (Account) kiriting:");
+        if(user) {
+            alert(user + " tizimdan muvaffaqiyatli chiqdingiz!");
+            location.reload();
+        }
+    }
+
+    function updateStats() {
+        document.getElementById('total-income').innerText = income.toLocaleString() + " so'm";
+        document.getElementById('total-expense').innerText = expense.toLocaleString() + " so'm";
+        document.getElementById('balance').innerText = (income - expense).toLocaleString() + " so'm";
+    }
+
+    function addTransaction() {
+        const name = document.getElementById('t-name').value;
+        const amount = parseFloat(document.getElementById('t-amount').value);
+        const type = document.getElementById('t-type').value;
+        const category = document.getElementById('t-category').value;
+        const date = new Date().toLocaleDateString();
+
+        if(!name || !amount) { alert("Ma'lumotlarni to'liq kiriting!"); return; }
+
+        // Statisikani yangilash
+        if(type === 'kirim') income += amount;
+        else expense += amount;
+
+        // Jadvalga qo'shish
+        const list = document.getElementById('transaction-list');
+        const emptyState = document.getElementById('empty-state');
+        if(emptyState) emptyState.remove();
+
+        const row = `
+            <tr class="border-b hover:bg-gray-50 transition">
+                <td class="p-4 font-medium">${name}</td>
+                <td class="p-4 font-bold ${type === 'kirim' ? 'text-emerald-600' : 'text-rose-500'}">
+                    ${type === 'kirim' ? '+' : '-'}${amount.toLocaleString()}
+                </td>
+                <td class="p-4 uppercase text-xs font-bold">${type}</td>
+                <td class="p-4 text-gray-600">${category}</td>
+                <td class="p-4 text-gray-500 text-sm">${date}</td>
+                <td class="p-4"><button class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button></td>
+            </tr>
+        `;
+        list.innerHTML += row;
+
+        updateStats();
+        toggleModal(false);
+        
+        // Tozalash
+        document.getElementById('t-name').value = "";
+        document.getElementById('t-amount').value = "";
+    }
+</script>
+
+</body>
+</html>
