@@ -9,17 +9,22 @@
     <style>
         body { background-color: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .bg-custom-purple { background-color: #6366f1; }
+        
+        /* Rasm ustiga kelganda hover effekti uchun */
+        .profile-avatar-container:hover .avatar-overlay {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
 
-<nav class="bg-custom-purple p-4 text-white flex justify-between items-center shadow-lg">
-    <div class="flex items-center space-x-2 text-xl font-bold">
+<nav class="bg-custom-purple p-4 text-white flex justify-between items-center shadow-lg relative z-40">
+    <div class="flex items-center space-x-2 text-xl font-bold cursor-pointer" onclick="showDashboard()">
         <i class="fas fa-wallet"></i>
         <span>Finance Nazorat</span>
     </div>
     <div class="flex items-center space-x-4">
-        <span class="flex items-center space-x-1 cursor-pointer">
+        <span onclick="showProfile()" class="flex items-center space-x-1 cursor-pointer hover:bg-indigo-500 px-2 py-1 rounded transition">
             <i class="fas fa-user-circle"></i>
             <span>Admin</span>
         </span>
@@ -31,59 +36,116 @@
 
 <div class="max-w-6xl mx-auto p-6">
     
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-emerald-600 p-6 rounded-2xl text-white shadow-md relative">
-            <p class="text-sm opacity-80">Umumiy Kirim</p>
-            <h2 id="total-income" class="text-3xl font-bold mt-1">0 so'm</h2>
-            <i class="fas fa-arrow-up absolute top-6 right-6 text-2xl opacity-50"></i>
+    <div id="dashboard-section">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-emerald-600 p-6 rounded-2xl text-white shadow-md relative">
+                <p class="text-sm opacity-80">Mavjud Balans</p>
+                <h2 id="balance" class="text-3xl font-bold mt-1">0 so'm</h2>
+                <i class="fas fa-arrow-up absolute top-6 right-6 text-2xl opacity-50"></i>
+            </div>
+            <div class="bg-rose-500 p-6 rounded-2xl text-white shadow-md relative">
+                <p class="text-sm opacity-80">Bu Oylik Chiqim</p>
+                <h2 id="total-expense" class="text-3xl font-bold mt-1">0 so'm</h2>
+                <i class="fas fa-arrow-down absolute top-6 right-6 text-2xl opacity-50"></i>
+            </div>
+            <div class="bg-blue-500 p-6 rounded-2xl text-white shadow-md relative">
+                <p class="text-sm opacity-80">Bu Oylik Kirim</p>
+                <h2 id="total-income" class="text-3xl font-bold mt-1">0 so'm</h2>
+                <i class="fas fa-wallet absolute top-6 right-6 text-2xl opacity-50"></i>
+            </div>
         </div>
-        <div class="bg-rose-500 p-6 rounded-2xl text-white shadow-md relative">
-            <p class="text-sm opacity-80">Umumiy Chiqim</p>
-            <h2 id="total-expense" class="text-3xl font-bold mt-1">0 so'm</h2>
-            <i class="fas fa-arrow-down absolute top-6 right-6 text-2xl opacity-50"></i>
-        </div>
-        <div class="bg-blue-500 p-6 rounded-2xl text-white shadow-md relative">
-            <p class="text-sm opacity-80">Balans</p>
-            <h2 id="balance" class="text-3xl font-bold mt-1">0 so'm</h2>
-            <i class="fas fa-wallet absolute top-6 right-6 text-2xl opacity-50"></i>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 flex justify-between items-center border-b">
+                <h3 class="text-lg font-bold text-gray-700">Tranzaksiyalar</h3>
+                <button onclick="toggleModal(true)" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 flex items-center space-x-2">
+                    <i class="fas fa-plus"></i>
+                    <span>Qo'shish</span>
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 text-gray-500 text-sm uppercase">
+                        <tr>
+                            <th class="p-4">Nomi</th>
+                            <th class="p-4">Miqdor</th>
+                            <th class="p-4">Tur</th>
+                            <th class="p-4">Kategoriya</th>
+                            <th class="p-4">Sana</th>
+                            <th class="p-4">Amal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transaction-list">
+                        <tr id="empty-state">
+                            <td colspan="6" class="p-10 text-center text-gray-400">
+                                <i class="fas fa-box-open text-4xl mb-2"></i>
+                                <p>Hali hech narsa qo'shilmagan</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="p-6 flex justify-between items-center border-b">
-            <h3 class="text-lg font-bold text-gray-700">Tranzaksiyalar</h3>
-            <button onclick="toggleModal(true)" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 flex items-center space-x-2">
-                <i class="fas fa-plus"></i>
-                <span>Qo'shish</span>
-            </button>
-        </div>
-        
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-gray-50 text-gray-500 text-sm uppercase">
-                    <tr>
-                        <th class="p-4">Nomi</th>
-                        <th class="p-4">Miqdor</th>
-                        <th class="p-4">Tur</th>
-                        <th class="p-4">Kategoriya</th>
-                        <th class="p-4">Sana</th>
-                        <th class="p-4">Amal</th>
-                    </tr>
-                </thead>
-                <tbody id="transaction-list">
-                    <tr id="empty-state">
-                        <td colspan="6" class="p-10 text-center text-gray-400">
-                            <i class="fas fa-box-open text-4xl mb-2"></i>
-                            <p>Hali hech narsa qo'shilmagan</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <div id="profile-section" class="hidden max-w-4xl mx-auto">
+        <button onclick="showDashboard()" class="mb-4 text-indigo-600 hover:text-indigo-800 flex items-center font-medium transition relative z-10">
+            <i class="fas fa-arrow-left mr-2"></i> Dashboardga qaytish
+        </button>
+
+        <div class="bg-white rounded-2xl shadow-md p-8 border border-gray-100 relative">
+            
+            <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-8 mb-10 pb-8 border-b">
+                
+                <div class="relative profile-avatar-container group cursor-pointer" onclick="triggerFileInput()">
+                    <img id="profile-avatar-display" src="https://via.placeholder.com/150?text=Admin" class="w-32 h-32 rounded-full border-4 border-indigo-100 shadow-sm object-cover transition-all group-hover:border-indigo-300" alt="User">
+                    
+                    <div class="avatar-overlay absolute inset-0 bg-black bg-opacity-60 rounded-full flex flex-col items-center justify-center text-white opacity-0 transition-opacity duration-300">
+                        <i class="fas fa-camera text-2xl mb-1"></i>
+                        <span class="text-xs font-medium">O'zgartirish</span>
+                    </div>
+                    
+                    <div class="absolute bottom-1 right-1 bg-green-500 w-6 h-6 border-4 border-white rounded-full z-10 hover:scale-110 transition-transform"></div>
+                    
+                    <input type="file" id="profile-file-input" accept="image/*" class="hidden" onchange="previewImage(this)">
+                </div>
+
+                <div class="text-center md:text-left space-y-2 flex-1">
+                    <h2 class="text-3xl font-bold text-gray-800">Admin</h2>
+                    <p class="text-gray-500"><i class="fas fa-envelope mr-2"></i> admin@example.com</p>
+                    <p class="text-gray-500"><i class="fas fa-phone mr-2"></i> +998 94 275 14 27</p>
+                    <p class="text-gray-400 text-sm italic mt-2">"Maruf shu"</p>
+                    <div class="pt-2">
+                        <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full border">Ro'yxatdan o'tgan: 25.04.2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold mb-6 text-gray-700 flex items-center">
+                    <i class="fas fa-user-edit mr-2 text-indigo-500"></i> Profilni tahrirlash
+                </h3>
+                <div class="grid grid-cols-1 gap-6 max-w-lg">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-600 mb-1">Telefon raqam</label>
+                        <input type="text" value="94 275 14 27" class="w-full border border-gray-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-400 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-600 mb-1">O'zingiz haqingizda</label>
+                        <textarea class="w-full border border-gray-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-400 transition" rows="4">Maruf shu</textarea>
+                    </div>
+                    <button class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-indigo-700 active:scale-95 transition-all w-fit">
+                        Saqlash
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
+
 </div>
 
-<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4">
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-xl w-full max-w-md p-6 shadow-2xl">
         <h3 class="text-xl font-bold mb-4">Yangi Tranzaksiya</h3>
         <div class="space-y-4">
@@ -122,10 +184,44 @@
     let income = 0;
     let expense = 0;
 
+    // --- RASM YUKLASH LOGIKASI ---
+
+    // 1. Rasm bosilganda yashirin inputni ishga tushirish
+    function triggerFileInput() {
+        document.getElementById('profile-file-input').click();
+    }
+
+    // 2. Fayl tanlanganda rasmni preview qilish (ko'rsatish)
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                // Ekranda turgan img src'ini tanlangan rasmga o'zgartirish
+                document.getElementById('profile-avatar-display').src = e.target.result;
+            }
+            
+            // Faylni o'qishni boshlash
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // --- BO'LIMLARNI BOSHQARISH (o'zgarishsiz) ---
+    function showProfile() {
+        document.getElementById('dashboard-section').classList.add('hidden');
+        document.getElementById('profile-section').classList.remove('hidden');
+    }
+
+    function showDashboard() {
+        document.getElementById('profile-section').classList.add('hidden');
+        document.getElementById('dashboard-section').classList.remove('hidden');
+    }
+
     function toggleModal(show) {
         document.getElementById('modal').classList.toggle('hidden', !show);
     }
 
+    // --- TRANZAKSIYALAR LOGIKASI (o'zgarishsiz) ---
     function logout() {
         let user = prompt("Login (Account) kiriting:");
         if(user) {
@@ -149,11 +245,9 @@
 
         if(!name || !amount) { alert("Ma'lumotlarni to'liq kiriting!"); return; }
 
-       
         if(type === 'kirim') income += amount;
         else expense += amount;
 
-      
         const list = document.getElementById('transaction-list');
         const emptyState = document.getElementById('empty-state');
         if(emptyState) emptyState.remove();
@@ -175,9 +269,10 @@
         updateStats();
         toggleModal(false);
         
-        
         document.getElementById('t-name').value = "";
         document.getElementById('t-amount').value = "";
+        document.getElementById('t-category').value = "";
+        document.getElementById('t-note').value = "";
     }
 </script>
 
