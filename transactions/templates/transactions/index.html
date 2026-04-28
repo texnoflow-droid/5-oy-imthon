@@ -6,12 +6,17 @@
 <div class="row mb-4">
     {% for card in cards %}
     <div class="col-md-4 mb-3">
-        <div class="card text-white p-4"
-             style="background: linear-gradient(135deg,
-             {% if card.card_type == 'uzcard' %}#11998e, #38ef7d
-             {% elif card.card_type == 'humo' %}#f953c6, #b91d73
-             {% elif card.card_type == 'visa' %}#1a1a2e, #16213e
-             {% else %}#f7971e, #ffd200{% endif %});">
+
+        {% if card.card_type == 'uzcard' %}
+        <div class="card text-white p-4" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
+        {% elif card.card_type == 'humo' %}
+        <div class="card text-white p-4" style="background: linear-gradient(135deg, #f953c6, #b91d73);">
+        {% elif card.card_type == 'visa' %}
+        <div class="card text-white p-4" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
+        {% else %}
+        <div class="card text-white p-4" style="background: linear-gradient(135deg, #f7971e, #ffd200);">
+        {% endif %}
+
             <div class="d-flex justify-content-between">
                 <div>
                     <p class="mb-1 opacity-75 small">{{ card.get_card_type_display }}</p>
@@ -22,6 +27,7 @@
             <p class="mt-2 mb-1 opacity-75 small">**** **** **** {{ card.card_number|slice:"-4:" }}</p>
             <h4 class="fw-bold">{{ card.balance|floatformat:0 }} so'm</h4>
         </div>
+
     </div>
     {% endfor %}
 </div>
