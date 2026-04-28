@@ -9,8 +9,7 @@
     <style>
         body { background-color: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .bg-custom-purple { background-color: #6366f1; }
-        
-        /* Rasm ustiga kelganda hover effekti uchun */
+
         .profile-avatar-container:hover .avatar-overlay {
             opacity: 1;
         }
@@ -184,29 +183,26 @@
     let income = 0;
     let expense = 0;
 
-    // --- RASM YUKLASH LOGIKASI ---
 
-    // 1. Rasm bosilganda yashirin inputni ishga tushirish
     function triggerFileInput() {
         document.getElementById('profile-file-input').click();
     }
 
-    // 2. Fayl tanlanganda rasmni preview qilish (ko'rsatish)
+
     function previewImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             
             reader.onload = function(e) {
-                // Ekranda turgan img src'ini tanlangan rasmga o'zgartirish
+                
                 document.getElementById('profile-avatar-display').src = e.target.result;
             }
             
-            // Faylni o'qishni boshlash
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    // --- BO'LIMLARNI BOSHQARISH (o'zgarishsiz) ---
+   
     function showProfile() {
         document.getElementById('dashboard-section').classList.add('hidden');
         document.getElementById('profile-section').classList.remove('hidden');
@@ -221,7 +217,7 @@
         document.getElementById('modal').classList.toggle('hidden', !show);
     }
 
-    // --- TRANZAKSIYALAR LOGIKASI (o'zgarishsiz) ---
+    
     function logout() {
         let user = prompt("Login (Account) kiriting:");
         if(user) {
