@@ -149,11 +149,11 @@
 
         if(!name || !amount) { alert("Ma'lumotlarni to'liq kiriting!"); return; }
 
-        // Statisikani yangilash
+       
         if(type === 'kirim') income += amount;
         else expense += amount;
 
-        // Jadvalga qo'shish
+      
         const list = document.getElementById('transaction-list');
         const emptyState = document.getElementById('empty-state');
         if(emptyState) emptyState.remove();
@@ -175,7 +175,7 @@
         updateStats();
         toggleModal(false);
         
-        // Tozalash
+        
         document.getElementById('t-name').value = "";
         document.getElementById('t-amount').value = "";
     }

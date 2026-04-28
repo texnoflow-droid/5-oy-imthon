@@ -2,39 +2,43 @@
 {% block content %}
 
 <div class="row mb-4">
+
     <div class="col-md-4 mb-3">
-        <div class="card bg-success text-white p-3">
+        <div class="card text-white p-3" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <p class="mb-1 opacity-75">Umumiy Kirim</p>
-                    <h3 class="fw-bold">{{ total_income }} so'm</h3>
-                </div>
-                <i class="fas fa-arrow-up fa-2x opacity-75"></i>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card bg-danger text-white p-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <p class="mb-1 opacity-75">Umumiy Chiqim</p>
-                    <h3 class="fw-bold">{{ total_expense }} so'm</h3>
-                </div>
-                <i class="fas fa-arrow-down fa-2x opacity-75"></i>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card bg-primary text-white p-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <p class="mb-1 opacity-75">Balans</p>
-                    <h3 class="fw-bold ">{{ balance }} so'm</h3>
+                    <p class="mb-1 opacity-75">Mavjud Balans</p>
+                    <h3 class="fw-bold">{{ balance|floatformat:0 }} so'm</h3>
                 </div>
                 <i class="fas fa-wallet fa-2x opacity-75"></i>
             </div>
         </div>
     </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card text-white p-3" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 opacity-75">Bu Oylik Kirim</p>
+                    <h3 class="fw-bold">{{ month_income|floatformat:0 }} so'm</h3>
+                </div>
+                <i class="fas fa-arrow-up fa-2x opacity-75"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card text-white p-3" style="background: linear-gradient(135deg, #f953c6, #b91d73);">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 opacity-75">Bu Oylik Chiqim</p>
+                    <h3 class="fw-bold">{{ month_expense|floatformat:0 }} so'm</h3>
+                </div>
+                <i class="fas fa-arrow-down fa-2x opacity-75"></i>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div class="card p-4">
@@ -60,7 +64,7 @@
             <tr>
                 <td>{{ t.title }}</td>
                 <td class="{% if t.type == 'income' %}text-success{% else %}text-danger{% endif %} fw-bold">
-                    {% if t.type == 'income' %}+{% else %}-{% endif %}{{ t.amount }} so'm
+                    {% if t.type == 'income' %}+{% else %}-{% endif %}{{ t.amount|floatformat:0 }} so'm
                 </td>
                 <td>
                     {% if t.type == 'income' %}
@@ -69,8 +73,8 @@
                     <span class="badge bg-danger">Chiqim</span>
                     {% endif %}
                 </td>
-                <td>{{ t.category }}</td>
-                <td>{{ t.created_at }}</td>
+                <td>{{ t.category|default:"—" }}</td>
+                <td>{{ t.created_at|date:"d.m.Y" }}</td>
                 <td>
                     <a href="{% url 'delete_transaction' t.pk %}"
                        class="btn btn-sm btn-outline-danger"
