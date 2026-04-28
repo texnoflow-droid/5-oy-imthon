@@ -1,8 +1,34 @@
 {% extends 'transactions/base.html' %}
 {% block content %}
 
+<!-- KARTALAR -->
+{% if cards %}
 <div class="row mb-4">
+    {% for card in cards %}
+    <div class="col-md-4 mb-3">
+        <div class="card text-white p-4"
+             style="background: linear-gradient(135deg,
+             {% if card.card_type == 'uzcard' %}#11998e, #38ef7d
+             {% elif card.card_type == 'humo' %}#f953c6, #b91d73
+             {% elif card.card_type == 'visa' %}#1a1a2e, #16213e
+             {% else %}#f7971e, #ffd200{% endif %});">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <p class="mb-1 opacity-75 small">{{ card.get_card_type_display }}</p>
+                    <h5 class="fw-bold">{{ card.name }}</h5>
+                </div>
+                <i class="fas fa-credit-card fa-2x opacity-75"></i>
+            </div>
+            <p class="mt-2 mb-1 opacity-75 small">**** **** **** {{ card.card_number|slice:"-4:" }}</p>
+            <h4 class="fw-bold">{{ card.balance|floatformat:0 }} so'm</h4>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 
+<!-- STATISTIKA -->
+<div class="row mb-4">
     <div class="col-md-4 mb-3">
         <div class="card text-white p-3" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
             <div class="d-flex justify-content-between align-items-center">
@@ -14,38 +40,36 @@
             </div>
         </div>
     </div>
-
     <div class="col-md-4 mb-3">
         <div class="card text-white p-3" style="background: linear-gradient(135deg, #667eea, #764ba2);">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="mb-1 opacity-75">Bu Oylik Kirim</p>
-                    <h3 class="fw-bold">{{ month_income|floatformat:0 }} so'm</h3>
+                    <h3 class="fw-bold">+{{ month_income|floatformat:0 }} so'm</h3>
                 </div>
                 <i class="fas fa-arrow-up fa-2x opacity-75"></i>
             </div>
         </div>
     </div>
-
     <div class="col-md-4 mb-3">
         <div class="card text-white p-3" style="background: linear-gradient(135deg, #f953c6, #b91d73);">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="mb-1 opacity-75">Bu Oylik Chiqim</p>
-                    <h3 class="fw-bold">{{ month_expense|floatformat:0 }} so'm</h3>
+                    <h3 class="fw-bold">-{{ month_expense|floatformat:0 }} so'm</h3>
                 </div>
                 <i class="fas fa-arrow-down fa-2x opacity-75"></i>
             </div>
         </div>
     </div>
-
 </div>
 
+<!-- TRANZAKSIYALAR JADVALI -->
 <div class="card p-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold mb-0">Tranzaksiyalar</h5>
         <a href="{% url 'add_transaction' %}" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i> Qo'shish
+            <i class="fas fa-plus me-1"></i>Qo'shish
         </a>
     </div>
     <table class="table table-hover align-middle">
@@ -55,6 +79,7 @@
                 <th>Miqdor</th>
                 <th>Tur</th>
                 <th>Kategoriya</th>
+                <th>Karta</th>
                 <th>Sana</th>
                 <th>Amal</th>
             </tr>
@@ -74,6 +99,7 @@
                     {% endif %}
                 </td>
                 <td>{{ t.category|default:"—" }}</td>
+                <td>{{ t.card|default:"—" }}</td>
                 <td>{{ t.created_at|date:"d.m.Y" }}</td>
                 <td>
                     <a href="{% url 'delete_transaction' t.pk %}"
@@ -85,7 +111,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" class="text-center text-muted py-4">
+                <td colspan="7" class="text-center text-muted py-4">
                     <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
                     Hali hech narsa qo'shilmagan
                 </td>

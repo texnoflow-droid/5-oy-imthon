@@ -2,9 +2,8 @@
 {% block content %}
 
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-7">
 
-        <!-- Kategoriya qo'shish -->
         <div class="card p-4 mb-3">
             <h6 class="fw-bold mb-3">
                 <i class="fas fa-tag me-2 text-primary"></i>Yangi kategoriya qo'shish
@@ -21,7 +20,6 @@
             </form>
         </div>
 
-        <!-- Tranzaksiya qo'shish -->
         <div class="card p-4">
             <h5 class="fw-bold mb-4">
                 <i class="fas fa-plus-circle me-2 text-primary"></i>Yangi Tranzaksiya
@@ -45,15 +43,19 @@
                     {{ form.category }}
                 </div>
                 <div class="mb-3">
+                    <label class="form-label fw-semibold">Karta</label>
+                    {{ form.card }}
+                </div>
+                <div class="mb-3">
                     <label class="form-label fw-semibold">Izoh</label>
                     {{ form.description }}
                 </div>
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-save me-1"></i> Saqlash
+                        <i class="fas fa-save me-1"></i>Saqlash
                     </button>
                     <a href="{% url 'index' %}" class="btn btn-outline-secondary w-100">
-                        <i class="fas fa-times me-1"></i> Bekor
+                        <i class="fas fa-times me-1"></i>Bekor
                     </a>
                 </div>
             </form>

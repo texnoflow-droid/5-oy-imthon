@@ -1,0 +1,84 @@
+{% extends 'transactions/base.html' %}
+{% block content %}
+
+<div class="row">
+
+    <!-- KARTALAR RO'YXATI -->
+    <div class="col-md-8">
+        <div class="card p-4 mb-4">
+            <h5 class="fw-bold mb-4">
+                <i class="fas fa-credit-card me-2 text-primary"></i>Mening Kartalarim
+            </h5>
+            <div class="row">
+                {% for card in cards %}
+                <div class="col-md-6 mb-3">
+                    <div class="card text-white p-4"
+                         style="background: linear-gradient(135deg,
+                         {% if card.card_type == 'uzcard' %}#11998e, #38ef7d
+                         {% elif card.card_type == 'humo' %}#f953c6, #b91d73
+                         {% elif card.card_type == 'visa' %}#1a1a2e, #16213e
+                         {% else %}#f7971e, #ffd200{% endif %});">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="mb-1 opacity-75 small">{{ card.get_card_type_display }}</p>
+                                <h5 class="fw-bold">{{ card.name }}</h5>
+                            </div>
+                            <i class="fas fa-credit-card fa-2x opacity-75"></i>
+                        </div>
+                        <p class="mt-3 mb-1 opacity-75 small">Karta raqami</p>
+                        <h6>**** **** **** {{ card.card_number|slice:"-4:" }}</h6>
+                        <p class="mt-2 mb-1 opacity-75 small">Balans</p>
+                        <h4 class="fw-bold">{{ card.balance|floatformat:0 }} so'm</h4>
+                        <div class="mt-3">
+                            <a href="{% url 'delete_card' card.pk %}"
+                               class="btn btn-sm btn-light opacity-75"
+                               onclick="return confirm('Kartani o\'chirishni xohlaysizmi?')">
+                                <i class="fas fa-trash me-1"></i>O'chirish
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center text-muted py-4">
+                    <i class="fas fa-credit-card fa-2x mb-2 d-block"></i>
+                    Hali karta qo'shilmagan
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- KARTA QO'SHISH FORMASI -->
+    <div class="col-md-4">
+        <div class="card p-4">
+            <h5 class="fw-bold mb-4">
+                <i class="fas fa-plus-circle me-2 text-primary"></i>Yangi Karta
+            </h5>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Karta nomi</label>
+                    {{ form.name }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Karta raqami</label>
+                    {{ form.card_number }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Balans</label>
+                    {{ form.balance }}
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Karta turi</label>
+                    {{ form.card_type }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-save me-1"></i>Saqlash
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
